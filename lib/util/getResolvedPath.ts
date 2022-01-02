@@ -1,5 +1,5 @@
 import path from "path"
 
-export const getResolvePath = (input: string) => {
+export default (input: string) => {
   return path.resolve(process.cwd(), input);
 };
