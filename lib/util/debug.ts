@@ -4,6 +4,7 @@ import debug from "debug"
 export const debugIndex = debug("convit:index");
 //--------------UTIL
 export const debugGetFilesByFormat = debug("convit:util:getFilesByFormat")
+export const debugArgsHandler = debug("convit:util:argsHandler")
 //--------------CONVERT
 export const debugConvertImage = debug("convit:convert:image")
 //--------------CHECK
