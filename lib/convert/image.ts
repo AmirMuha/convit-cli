@@ -1,5 +1,4 @@
 import sharp from "sharp"
-import fs from "fs"
 import { red, gray, green } from "../util/chalk";
 import errorHandler from "../util/errorHandler";
 import path from "path"
@@ -9,9 +8,7 @@ import {
   getFilesByFormatInSeveralDirs,
 } from "../util/getFilesByFormat";
 import { debugConvertImage as debug } from "../util/debug";
-
-export const supportedInputImages = ["svg","png","jpeg","webp","tiff","jpg","avif","gif"]
-export const supportedOutputImages = ["png","jpeg","webp","tiff","jpg","avif"]
+import {supportedInputImages} from "../util/supportedFormats";
 
 // ------------------ CONVERT IMAGES WITH SHARP
 const convert = (options:{
@@ -23,8 +20,9 @@ const convert = (options:{
   quality?:number
   progressive?:boolean
   compressionLevel?: number
+  filename?: string
 }) => {
-  const {
+  let {
     input,
     output,
     format,
@@ -33,14 +31,15 @@ const convert = (options:{
     quality,
     compressionLevel,
     progressive,
+    filename
   } = options;
-  const writeStream = fs.createWriteStream(path.resolve(process.cwd(), output));
   sharp(input)
     .toFormat(format, { quality, progressive, compressionLevel })
     .resize(width, height)
-    .toFile(output)
+    .toFile(path.resolve(process.cwd(), output))
     .then((info) => {
-      debug(green("Successful! "), gray(`Output: ${output}`));
+      console.log(info)
+      debug(green("Successful! "), gray(`Output: ${output}\n`));
     })
     .catch((e) => {
       console.error(red("Error: "), gray(e.message));
@@ -79,6 +78,11 @@ const  convertImage = (options:{
   } = options;
   errorHandler(() => {
   const files: string[] = [];
+  //-----------------CHECKING IF FORMAT IS CORRECT
+  if(supportedInputImages.includes(format)){
+    debug(red("Error: "), gray(`${format} is not acceptable as a output format.`))
+    return
+  }
   //-----------------GATHERING FILES
   getFilesByFormatInSeveralDirs({
     inputs: inputPath,
