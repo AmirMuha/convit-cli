@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import {red,gray } from "./util/chalk"
 import {debugIndex as debug} from "./util/debug"
 
