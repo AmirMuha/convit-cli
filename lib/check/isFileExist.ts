@@ -1,6 +1,7 @@
 import fs from "fs"
-import path from "path"
+import getResolvedPath from "../util/getResolvedPath"
+
 
 export default (inputPath: string): boolean => {
-  return !!fs.existsSync(path.resolve(__dirname, inputPath))
+  return !!fs.existsSync(getResolvedPath(inputPath))
 }
