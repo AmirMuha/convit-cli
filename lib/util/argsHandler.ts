@@ -19,7 +19,7 @@ export const parsedArguments = () => {
         return answers
       },
       (argv) => {
-        console.log("handler", argv);
+        debug("handler: ", argv);
       }
     )
     .option("files", {
@@ -76,6 +76,37 @@ export const parsedArguments = () => {
           return sizeObj;
         }
       },
+    })
+    .option("width", {
+      describe: "Specify the output image width.",
+      alias: ["w"],
+      type:"number",
+      example: "$0 -f [files] -t [format] <--width, -w> [width]",
+      group: GroupOfOptions.IMAGE,
+      coerce(width: number) {
+        return width
+      }
+    })
+    .option("height", {
+      describe: "Specify the output image height.",
+      alias: ["h"],
+      type:"number",
+      example: "$0 -f [files] -t [format] <--height, -h> [height]",
+      group: GroupOfOptions.IMAGE,
+      coerce(height: number) {
+        return height
+      }
+    })
+    .option("quality", {
+      describe: "Specify the quality of the output image. valid range -> 0 to 100",
+      type: "number",
+      alias: ["q"],
+      example: "$0 -f [files] -t [format] <--quality, -q> [quality value]",
+      group: GroupOfOptions.IMAGE,
+      coerce(quality: number) {
+        console.log(quality)
+        return quality
+      }
     })
     .help("help")
     .parseSync();
