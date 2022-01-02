@@ -11,7 +11,7 @@ enum GroupOfOptions {
   MUSIC = "Music Manipulation",
 }
 export const parsedArguments = () => {
-  return yargs(process.argv.slice(2))
+  const argvs =  yargs(process.argv.slice(2))
     .command(
       "interactive",
       "Use this command to use the interactive mode in order to manipulate your files.",
@@ -126,13 +126,14 @@ export const parsedArguments = () => {
       group: GroupOfOptions.IMAGE,
       coerce(quality: number) {
         if (quality) {
-          console.log(quality);
           return quality;
         }
       },
     })
     .help("help")
     .parseSync();
+    debug(green("Passed arguments: "), argvs);
+    return argvs;
 };
 console.log(parsedArguments());
 
