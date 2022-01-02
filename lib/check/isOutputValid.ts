@@ -22,12 +22,12 @@ import { allFilenamesRegExp, lastFilenameRegExp } from "../util/regexp";
 const isOutputValid = (options:{
   output:string
 }) => {
-  const {
-    output
+  let {
+    output,
   } = options;
   const isOutputPathExist = fs.existsSync(output);
   if(isOutputPathExist) {
-    debug(green(`Output dir exist.`));
+    debug(green(`Output is valid.`));
   } else if(!isOutputPathExist && lastFilenameRegExp.test(output)) {
     debug(
       `Output directory doesn't exist. Want to create a new directory named ${red(
@@ -37,5 +37,4 @@ const isOutputValid = (options:{
     // Implement asking the client if wants to make a directory
   }
 }
-
 export default isOutputValid
