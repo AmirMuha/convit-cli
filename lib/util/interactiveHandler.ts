@@ -1,4 +1,5 @@
 import { red,orange } from "./chalk";
+import fs from "fs"
 import {supportedOutputImages} from "./supportedFormats";
 import getResolvedPath from "./getResolvedPath";
 import {QuestionCollection} from "inquirer"
@@ -21,7 +22,11 @@ export const questions:QuestionCollection = [
         const files = input.split(",");
         const resolvedFiles: string[] = [];
         files.forEach((f) => {
-          resolvedFiles.push(getResolvedPath(f.trim()));
+          if(fs.existsSync(getResolvedPath(f))) {
+            resolvedFiles.push(getResolvedPath(f.trim()));
+          } else {
+            throw new Error(`file "${f}" doesn't exist.`)
+          }
         });
         return resolvedFiles;
       },
