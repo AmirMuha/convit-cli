@@ -50,7 +50,6 @@ const checkIfRequiredOptionsExist = (obj) => {
     }
     else {
         checkIfRequiredOptionsExist(args);
-        return;
         (0, image_1.default)(Object.assign(Object.assign(Object.assign(Object.assign({ inputPath: args.files, format: args.convertTo }, (args.output ? { outputPath: args.output } : {})), (args.width || args.size.width ? { width: args.width } : {})), (args.height || args.size.height ? { height: args.height } : {})), (args.quality ? { quality: args.quality } : {})));
     }
 })();
