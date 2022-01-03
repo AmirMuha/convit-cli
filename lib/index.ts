@@ -61,7 +61,6 @@ const checkIfRequiredOptionsExist = (obj:any) => {
       ...(answers.quality?{quality:answers.quality}:{}),
     })
   } else {
-    console.log(args.size)
     checkIfRequiredOptionsExist(args);
     return
     convertImage({
