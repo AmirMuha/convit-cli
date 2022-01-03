@@ -16,8 +16,8 @@ export enum GroupOfOptions {
 export default () => {
   const argvs = yargs(process.argv.slice(2))
     .command(
-      ["interactive","i"],
-      "Use this command to use the interactive mode in order to manipulate your files. Example: convit <interactive | i>",
+      ["interactive", "i"],
+      "Use this command to use the interactive mode in order to manipulate your files. Example: convit <interactive | i>"
     )
     .option("files", {
       describe: "Selecting files to convert,optimize,or resize.",
