@@ -1,9 +1,10 @@
 import {
   debugIsOutputValid as debug
 } from "../util/debug"
-import {green, red} from "../util/chalk"
+import {green, red,gray,orange} from "../util/chalk"
 import fs from "fs"
-import { allFilenamesRegExp, lastFilenameRegExp } from "../util/regexp";
+import inquirer from "inquirer"
+import getResolvedPath from "../util/getResolvedPath"
 
 // ------------------ CHECKING IF OUTPUT PATH IS CORRECT (IF EXIST)
 
@@ -19,7 +20,7 @@ import { allFilenamesRegExp, lastFilenameRegExp } from "../util/regexp";
  * })
  * ```
 */
-const isOutputValid = (options:{
+export default async(options:{
   output:string
 }) => {
   let {
@@ -28,13 +29,24 @@ const isOutputValid = (options:{
   const isOutputPathExist = fs.existsSync(output);
   if(isOutputPathExist) {
     debug(green(`Output is valid.`));
-  } else if(!isOutputPathExist && lastFilenameRegExp.test(output)) {
-    debug(
-      `Output directory doesn't exist. Want to create a new directory named ${red(
-        output.match(allFilenamesRegExp)?.pop()
-      )} ?`
-    );
-    // Implement asking the client if wants to make a directory
+  } else {
+    const answer = await inquirer.prompt([
+      {
+        name: "mkdir",
+        type:"confirm",
+        prefix: "*",
+        default: "No",
+        message: red(
+          `Output directory doesn't exist. Want to create a new directory named ${gray(
+            output
+          )} ?${orange("(default -> false)")}`
+        ),
+      },
+    ]);
+    if(answer && answer.mkdir) {
+      fs.mkdirSync(getResolvedPath(output));
+    } else {
+      process.exit(1)
+    }
   }
 }
-export default isOutputValid
