@@ -3,12 +3,14 @@ import { green, orange } from "./chalk";
 import { debugArgsHandler as debug } from "./debug";
 import getResolvedPath from "./getResolvedPath";
 import { supportedOutputImages } from "./supportedFormats";
+
 //------------ENUM - GROUPS
 export enum GroupOfOptions {
   IMAGE = "Image Manipulation",
   VIDEO = "Video Manipulation",
   MUSIC = "Music Manipulation",
 }
+
 //------------PARSING ARGUMENTS
 export default () => {
   const argvs = yargs(process.argv.slice(2))
@@ -49,6 +51,7 @@ export default () => {
       describe: "Enter the output path or the output filename (optional).",
       type: "string",
       alias: ["o"],
+      nargs: 1,
       example:
         "$0 -f [files] -t [format] <--output, -o> [output_path|output_filename]",
       group: GroupOfOptions.IMAGE,
