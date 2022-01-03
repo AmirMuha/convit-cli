@@ -9,7 +9,7 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "boxen": "^6.2.1",
+    "boxen": "^5.1.2",
     "chalk": "^4.1.2",
     "cli-progress": "^3.9.1",
     "debug": "^4.3.3",
