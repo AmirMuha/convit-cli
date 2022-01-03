@@ -2,6 +2,7 @@ import yargs from "yargs";
 import { green, orange } from "./chalk";
 import { debugArgsHandler as debug } from "./debug";
 import getResolvedPath from "./getResolvedPath";
+import {lastDirRegExp} from "./regexp";
 import { supportedOutputImages } from "./supportedFormats";
 
 //------------ENUM - GROUPS
@@ -56,8 +57,13 @@ export default () => {
         "$0 -f [files] -t [format] <--output, -o> [output_path|output_filename]",
       group: GroupOfOptions.IMAGE,
       coerce(output: string) {
+        if (output && !lastDirRegExp.test(output)) {
+          throw new Error(
+            "Please consider passing a directory instead of a file as an output."
+          );
+        }
         if (output) {
-          return output.trim();
+          return getResolvedPath(output);
         }
       },
     })
