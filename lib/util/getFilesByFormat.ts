@@ -1,13 +1,10 @@
 import fs from "fs"
-import {orange,green,red,yellow,gray} from "./chalk"
+import {green,red,yellow,gray} from "./chalk"
 import {
   debugGetFilesByFormat as debug
 } from "./debug"
 import isDir from "../check/isDir";
-import {AllFileTypes} from "../types";
-import isImage from "../check/isImage";
 import isFileExist from "../check/isFileExist";
-
 
 /**
  * @description use this function to find all files corresponding to a specific format.
@@ -34,32 +31,35 @@ import isFileExist from "../check/isFileExist";
 */
 export const getFilesByFormatInOneDir = (options: {
   directory: string;
-  format: AllFileTypes;
+  format: "image"|"video"|"audio";
 }): string[]=> {
-  if(!options.directory || !options.format) {
+  let {directory, format} = options;
+  console.log(directory)
+  if(!directory || !format) {
     debug(red("Error: "),gray(`Directory and Format both are required.`))
     return []
   }
-  const formatRegExp = new RegExp(`\.${options.format}$`, "i");
+  const getCorrespondingModule =
+    format === "image"
+      ? require("../check/isImage").default
+      : format === "video"
+      ? require("../check/isVideo").default
+      : format === "audio"
+      ? require("../check/isAudio").default
+      : null;
+  if(!getCorrespondingModule) {
+    throw new Error("Something went wrong with getting the corresponding module.")
+  } 
   const matchedFiles: string[] = [];
-  const files = fs.readdirSync(options.directory);
-  debug(
-    orange(
-      `Searching for all .${options.format.toUpperCase()} files in ${
-        options.directory
-      }`
-    )
-  );
-  debug(yellow(`All files in ${options.directory}}:`),files);
-  if (isDir(options.directory)) {
-    files.forEach((f) => {
-      if (formatRegExp.test(f)) {
-        matchedFiles.push(`${options.directory}/${f}`);
-        return;
-      }
-    });
-  }
-  debug(green(`Found ${matchedFiles.length} .${(options.format).toUpperCase()}`));
+  const files = fs.readdirSync(directory);
+  debug(yellow(`All files in ${directory}:`), files);
+  files.forEach((f) => {
+    if (getCorrespondingModule(f)) {
+      matchedFiles.push(`${directory}/${f}`);
+      return;
+    }
+  });
+  debug(green(`Found ${matchedFiles.length}`), matchedFiles);
   return matchedFiles;
 }
 
@@ -89,23 +89,35 @@ export const getFilesByFormatInOneDir = (options: {
 */
 export const getFilesByFormatInSeveralDirs = (options:{
   inputs:string[]
-  format: AllFileTypes
+  format: "image"|"video"|"audio"
 }):string[] => {
   const {
     inputs,
     format
   } = options;
+  try{
   const files:string[] = [];
+  const getCorrespondingModule =
+    format === "image"
+      ? require("../check/isImage").default
+      : format === "video"
+      ? require("../check/isVideo").default
+      : format === "audio"
+      ? require("../check/isAudio").default
+      : null;
+  if(!getCorrespondingModule) {
+    throw new Error("Something went wrong with getting the corresponding module.")
+  } 
   inputs.forEach((i) => {
-    if(isImage(i)) {
+    if(getCorrespondingModule(i)) {
       if(isFileExist(i)) {
         files.push(i)
       } else {
         console.error(red(`${i} file doesn't exist. Perhaps deleted before being converted.`))
       }
-    } else if(isDir(i)) {
-      files.concat(
-        getFilesByFormatInOneDir({
+    } else if (isDir(i)) {
+      files.push(
+        ...getFilesByFormatInOneDir({
           directory: i,
           format,
         })
@@ -116,5 +128,9 @@ export const getFilesByFormatInSeveralDirs = (options:{
     }
   });
   return files
+  } catch(e) {
+    console.log(red("Error: "),e.message)
+    process.exit(1)
+  }
 }
 
