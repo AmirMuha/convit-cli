@@ -21,6 +21,9 @@ export const questions:QuestionCollection = [
       filter(input: string) {
         const files = input.split(",");
         const resolvedFiles: string[] = [];
+        if(!files[0]) {
+          throw new Error("No files or directories specified.")
+        }
         files.forEach((f) => {
           if(fs.existsSync(getResolvedPath(f))) {
             resolvedFiles.push(getResolvedPath(f.trim()));
