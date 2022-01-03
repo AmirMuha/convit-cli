@@ -1,11 +1,14 @@
-import inquirer from "inquirer";
 import { red,orange } from "./chalk";
-import path from "path";
 import {supportedOutputImages} from "./supportedFormats";
 import getResolvedPath from "./getResolvedPath";
+import {QuestionCollection} from "inquirer"
+import inquirer from "inquirer";
+import inquirerFuzzyPath from "inquirer-fuzzy-path"
 
-export const interactiveHandler = () => { 
-  const answers = inquirer.prompt([
+//------------REGISTERING INQUIRER PLUGIN
+inquirer.registerPrompt('fuzzypath', inquirerFuzzyPath);
+//------------QUESTIONS
+export const questions:QuestionCollection = [
     {
       name: "files",
       type: "input",
@@ -82,6 +85,9 @@ export const interactiveHandler = () => {
         return input;
       },
     },
-  ]);
-  return answers
-}
+];
+// -------------SETTING UP INQUIRER
+export default async () => {
+  const answers = await inquirer.prompt(questions);
+  return answers;
+};
