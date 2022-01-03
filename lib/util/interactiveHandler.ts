@@ -13,6 +13,7 @@ export const questions: QuestionCollection = [
   {
     name: "files",
     type: "input",
+    prefix: "*",
     message: `${red(
       `Enter the files you want to manipulate ${orange(
         "(required, seperate files with comma)"
@@ -37,6 +38,7 @@ export const questions: QuestionCollection = [
   {
     name: "convertTo",
     type: "list",
+    prefix: "*",
     message: `${red(
       `Select the format you want to convert your files into ? ${orange(
         "(required)"
@@ -47,12 +49,16 @@ export const questions: QuestionCollection = [
   {
     name: "output",
     type: "string",
+    prefix: "*",
     message: `${red(
       `Enter the output path where you want to save converted file there ${orange(
         "(optional, default -> current directory with the input filename)"
       )}\n example -> ./output.ext or ./outputDir:`
     )} `,
     filter(input: string) {
+      if(input && /(\.\w+|\.\w+\/*)$/i.test(input)) {
+        throw new Error("Please consider passing a directory instead of a file as an output.")
+      }
       if (input) {
         input = getResolvedPath(input.trim());
         return input;
@@ -62,6 +68,7 @@ export const questions: QuestionCollection = [
   {
     name: "width",
     type: "number",
+    prefix: "*",
     message: `${red(
       `Enter the width of the output file in pixel ${orange(
         "(optional)"
@@ -74,6 +81,7 @@ export const questions: QuestionCollection = [
   {
     name: "height",
     type: "number",
+    prefix: "*",
     message: `${red(
       `Enter the height of the output file in pixel ${orange(
         "(optional)"
@@ -86,6 +94,7 @@ export const questions: QuestionCollection = [
   {
     name: "quality",
     type: "number",
+    prefix: "*",
     message: `${red(
       `Enter the quality of the output file ${orange(
         "(optional, valid range -> 0 to 100)"
