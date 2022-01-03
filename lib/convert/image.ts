@@ -85,20 +85,18 @@ const convert = (options: {
  *
  * @example
  */
-
 const convertImage = (options: {
   inputPath: string[];
   format: SupportedImageOutput;
   quality?: number;
   width?: number;
   height?: number;
-  outputPath: string;
+  outputPath?: string;
 }) => {
   const { width, height, quality, inputPath, outputPath, format } = options;
-  errorHandler(() => {
-    const files: string[] = [];
+  errorHandler(async() => {
     //-----------------CHECKING IF FORMAT IS CORRECT
-    if (supportedInputImages.includes(format)) {
+    if (!supportedInputImages.includes(format)) {
       debug(
         red("Error: "),
         gray(`${format} is not acceptable as a output format.`)
@@ -106,14 +104,16 @@ const convertImage = (options: {
       return;
     }
     //-----------------GATHERING FILES
-    getFilesByFormatInSeveralDirs({
+    const files: string[] = getFilesByFormatInSeveralDirs({
       inputs: inputPath,
-      format,
+      format: "image",
     });
     //-----------------CHECKING THE OUTPUT PATH IS CORRECT
-    isOutputValid({
-      output: outputPath,
-    });
+    if (outputPath) {
+      await isOutputValid({
+        output: outputPath,
+      });
+    }
     //-----------------CONVERTING THE IMAGE
     files.forEach((i) => {
       convert({
