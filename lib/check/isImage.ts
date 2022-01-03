@@ -1,7 +1,8 @@
 export const filenameRegEx = /\.(png|jpeg|webp|svg|gif|tiff|avif|jpg)$/i;
-export default (inputPath: string) => {
-  const filename = inputPath.match(filenameRegEx)
+export default (input: string) => {
+  const filename = filenameRegEx.test(input)
   if(filename){
-    return filename[1]
+    return true
   }
+  return false
 }
