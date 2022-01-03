@@ -1,0 +1,10 @@
+import debug from "debug";
+export declare const debugIndex: debug.Debugger;
+export declare const debugGetFilesByFormat: debug.Debugger;
+export declare const debugArgsHandler: debug.Debugger;
+export declare const debugErrorHandler: debug.Debugger;
+export declare const debugConvertImage: debug.Debugger;
+export declare const debugIsDir: debug.Debugger;
+export declare const debugIsFileExist: debug.Debugger;
+export declare const debugIsImage: debug.Debugger;
+export declare const debugIsOutputValid: debug.Debugger;

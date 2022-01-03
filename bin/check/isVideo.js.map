@@ -1,0 +1,1 @@
+{"version":3,"file":"isVideo.js","sourceRoot":"","sources":["../../lib/check/isVideo.ts"],"names":[],"mappings":";;;AACa,QAAA,aAAa,GAAG,WAAW,CAAC;AACzC,kBAAe,CAAC,KAAa,EAAU,EAAE;IACvC,MAAM,QAAQ,GAAG,qBAAa,CAAC,IAAI,CAAC,KAAK,CAAC,CAAA;IAC1C,IAAG,QAAQ,EAAC;QACV,OAAO,IAAI,CAAA;KACZ;IACD,OAAO,KAAK,CAAA;AACd,CAAC,CAAA"}
