@@ -62,7 +62,6 @@ const checkIfRequiredOptionsExist = (obj:any) => {
     })
   } else {
     checkIfRequiredOptionsExist(args);
-    return
     convertImage({
       inputPath: args.files as string[],
       format: args.convertTo as SupportedImageOutput,
