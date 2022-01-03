@@ -1,27 +1,20 @@
 import yargs from "yargs";
-import { green, gray } from "./chalk";
+import { green, orange } from "./chalk";
 import { debugArgsHandler as debug } from "./debug";
 import getResolvedPath from "./getResolvedPath";
-import { interactiveHandler } from "./interactiveHandler";
 import { supportedOutputImages } from "./supportedFormats";
-
-enum GroupOfOptions {
+//------------ENUM - GROUPS
+export enum GroupOfOptions {
   IMAGE = "Image Manipulation",
   VIDEO = "Video Manipulation",
   MUSIC = "Music Manipulation",
 }
-export const parsedArguments = () => {
-  const argvs =  yargs(process.argv.slice(2))
+//------------PARSING ARGUMENTS
+export default () => {
+  const argvs = yargs(process.argv.slice(2))
     .command(
-      "interactive",
-      "Use this command to use the interactive mode in order to manipulate your files.",
-      async () => {
-        const answers = await interactiveHandler();
-        return answers;
-      },
-      (argv) => {
-        debug("handler: ", argv);
-      }
+      ["interactive","i"],
+      "Use this command to use the interactive mode in order to manipulate your files. Example: convit <interactive | i>",
     )
     .option("files", {
       describe: "Selecting files to convert,optimize,or resize.",
@@ -32,14 +25,11 @@ export const parsedArguments = () => {
       example:
         "$0 -f [files] -t [format] :ex. convit -f ./image1.png ./dir/image-2.jpeg  -t avif",
       coerce(files: string[]) {
-        if (!files) {
-          throw new Error(
-            "Files option is required, please provide the files you intend to manipulate."
-          );
+        if (files) {
+          const resolvedFiles = files.map((f) => getResolvedPath(f));
+          debug(green("Files: "), resolvedFiles);
+          return resolvedFiles;
         }
-        const resolvedFiles = files.map((f) => getResolvedPath(f));
-        debug(green("Files: "), resolvedFiles);
-        return resolvedFiles;
       },
     })
     .option("convert-to", {
@@ -49,29 +39,24 @@ export const parsedArguments = () => {
       choices: supportedOutputImages,
       group: GroupOfOptions.IMAGE,
       coerce(format: string) {
-        if (!format) {
-          throw new Error("Format is required, Please provide a format.");
+        if (format) {
+          debug(green(`Format: ${orange(format)}`));
+          return format;
         }
-        if (!supportedOutputImages.includes(format)) {
-          throw new Error(
-            "Format is not valid please try again with a valid format. You can view valid image formats by seeing --help option."
-          );
-        }
-        debug(green(`Format: ${gray(format)}`));
-        return format;
       },
     })
     .option("output", {
       describe: "Enter the output path or the output filename (optional).",
       type: "string",
       alias: ["o"],
-      example: "$0 -f [files] -t [format] <--output, -o> [output_path|output_filename]",
+      example:
+        "$0 -f [files] -t [format] <--output, -o> [output_path|output_filename]",
       group: GroupOfOptions.IMAGE,
-      coerce(output:string) {
-        if(output) {
-          return output.trim()
+      coerce(output: string) {
+        if (output) {
+          return output.trim();
         }
-      }
+      },
     })
     .option("size", {
       describe: "Specify the size of the images your want to manipulate.",
@@ -135,8 +120,5 @@ export const parsedArguments = () => {
     debug(green("Passed arguments: "), argvs);
     return argvs;
 };
-console.log(parsedArguments());
-
-
 
 
