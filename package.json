@@ -1,6 +1,6 @@
 {
   "name": "convit-cli",
-  "description": "Convit-cli is a CLI tool that helps you transform your images into other formats.",
+  "description": "convert-cli is a CLI tool that helps you manipulate your images.",
   "author": "AmirMohammad MirzaeiRad",
   "main": "bin/index.js",
   "scripts": {
@@ -38,6 +38,8 @@
     "typescript": "^4.5.4"
   },
   "keywords": [
+    "convit",
+    "convit-cli",
     "convert",
     "convert image",
     "png",
