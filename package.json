@@ -58,6 +58,9 @@
   "bin": {
     "convit": "bin/index.js"
   },
+  "files": [
+    "bin"
+  ],
   "license": "MIT",
   "version": "1.0.0"
 }
